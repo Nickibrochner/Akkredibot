@@ -27,7 +27,7 @@ app.get('/antal', function(req, res) {
 	// her vælges akkredibot databasen inklusiv query 
 			db.collection('Akkredibot').count({
 
-			"﻿Id": { $gt: parseInt(901000) } 
+			"﻿Id": { $gt: parseInt(901000) } //jeg ved ikke hvorfor men ?-tegnet skal være med for at det virker
 				
 			}, function(err, result) {
 		
@@ -36,7 +36,7 @@ app.get('/antal', function(req, res) {
 			})
 			db.collection('Akkredibot').count({
 				
-			"﻿Id": { $lt: parseInt(901000) } 
+			"﻿Id": { $lt: parseInt(901000) }  //jeg ved ikke hvorfor men ?-tegnet skal være med for at det virker
 			
 			}, function(err, result) {
 		
@@ -181,53 +181,37 @@ app.get('/uni', function(req, res) {
 				
 				Institution: type,
 				
-			}, function(err, result) {
-				mongodbSvar = result 
-					
-			})
+			}, function(err, result) {mongodbSvar = result})
 		
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Uddannelsestype: "Bachelor"
 				
-			}, function(err, result) {
-				mongodbUdd1 = result 
-					
-			})
+			}, function(err, result) {mongodbUdd1 = result})
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Uddannelsestype: "Kandidat"
 				
-			}, function(err, result) {
-				mongodbUdd2 = result 
-					
-			})			
+			}, function(err, result) {mongodbUdd2 = result})			
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Positiv"
 				
-			}, function(err, result) {
-				mongodbAfgr1 = result 
-					
-			})
+			}, function(err, result) {mongodbAfgr1 = result})
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Betinget positiv"
 				
-			}, function(err, result) {
-				mongodbAfgr2 = result 
-					
-			})
+			}, function(err, result) {mongodbAfgr2 = result})
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Afslag"
 				
-			}, function(err, result) {
-				mongodbAfgr3 = result 
+			}, function(err, result) {mongodbAfgr3 = result 
 					
 			callback()
 			})
@@ -270,45 +254,32 @@ app.get('/prof', function(req, res) {
 				
 				Institution: type, Uddannelsestype: "Professionsbachelor"
 				
-			}, function(err, result) {
-				mongodbUdd1 = result 
-					
-			})
+			}, function(err, result) {mongodbUdd1 = result})
 
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Uddannelsestype: "Erhvervsakademiuddannelse"
 				
-			}, function(err, result) {
-				mongodbUdd2 = result 
-					
-			})
+			}, function(err, result) {mongodbUdd2 = result})
 			
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Positiv"
 				
-			}, function(err, result) {
-				mongodbAfgr1 = result 
-					
-			})
+			}, function(err, result) {mongodbAfgr1 = result})
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Betinget positiv"
 				
-			}, function(err, result) {
-				mongodbAfgr2 = result 
-					
-			})
+			}, function(err, result) {mongodbAfgr2 = result})
 			
 			db.collection('Akkredibot').count({
 				
 				Institution: type, Raadets_afgoerelse: "Afslag"
 				
-			}, function(err, result) {
-				mongodbAfgr3 = result 
+			}, function(err, result) {mongodbAfgr3 = result 
 					
 			callback()
 			})
@@ -613,35 +584,42 @@ app.get('/akkr', function(req, res) {
 	jsonResponse.length = 0;
 });
 
-// Test
-app.get('/test', function(req, res) {
-		
-	function QueryMongoDB(callback){
-		MongoClient.connect('mongodb://localhost:27017/Akkredibot', function (err, db) {
-		if (err) throw err
-   
-   // her vælges akkredibot databasen inklusiv query 
-			db.collection('Akkredibot').find({Institution: "Københavns Universitet", $text: { $search: "Biologi" }}, function(err, result) {
-				
-				mongodbSvar = JSON.stringify(result)
-							
-			callback()
-			})
-		})
-	}
-			
-	function SendJSON() {
-		jsonResponse.push({ "text": "Vi har foretaget " + mongodbSvar});
-		res.send(jsonResponse);		
-	}
-
-	QueryMongoDB(SendJSON);
-	mongodbSvar.length = 0;
-});
-
-// Liste med UA'er - Ved ikke om den virker efter jeg har tilføjet If/Else
+// Liste med UA'er (Done)
 app.get('/findua', function(req, res) {
 	
+	var inst = req.query.Search_Inst
+	if (inst ="KU") {inst = "Københavns Universitet"};
+	if (inst ="CBS") {inst = "Copenhagen Business School"};	
+	if (inst ="DMJX") {inst = "Danmarks Medie- og Journalisthøjskole"};
+	if (inst ="SIMAC") {inst = "Svendborg International Maritime Academy"};
+	if (inst ="Martec") {inst = "Martec - Frederikshavns Maritime uddannelsescenter"};
+	if (inst ="MSK") {inst = "Maskinmesterskolen København"};
+	if (inst ="IBA") {inst = "Erhvervsakademi Kolding"};
+	if (inst ="EAMV") {inst = "Erhvervsakademi Midtvest"};
+	if (inst ="EASV") {inst = "Erhvervsakademi Sydvest"};
+	if (inst ="EAL") {inst = "Erhvervsakademiet Lillebælt"};
+	if (inst ="Dania") {inst = "Erhvervsakademi Dania"};
+	if (inst ="CBA") {inst = "Copenhagen Business Academy"};
+	if (inst ="UCC") {inst = "Professionshøjskolen UCC"};
+	if (inst ="Metropol") {inst = "Professionshøjskolen Metropol"};
+	if (inst ="AU") {inst = "Aarhus Universitet"};
+	if (inst ="AAU") {inst = "Aalborg Universitet"};
+	if (inst ="EASJ") {inst = "Erhvervsakademi Sjælland"};
+	if (inst ="AAMS") {inst = "Aarhus Maskinmesterskole"};
+	if (inst ="VIA") {inst = "VIA University College"};
+	if (inst ="EAAA") {inst = "Erhvervsakademi Aarhus"};
+	if (inst ="KEA") {inst = "Københavns Erhvervsakademi"};
+	if (inst ="UCS") {inst = "University College Sjælland"};
+	if (inst ="UCL") {inst = "University College Lillebælt"};
+	if (inst ="SDU") {inst = "Syddansk Universitet"};
+	if (inst ="RUC") {inst = "Roskilde Universitet"};
+	if (inst ="ITU") {inst = "IT-Universitetet i København"};
+	if (inst ="DTU") {inst = "Danmarks Tekniske Universitet"};
+	var udd = req.query.udd
+	var mongodburl = 0
+	var mongodburl2 = 0
+	var mongodbNavn
+
 	function QueryMongoDB(callback){
 		MongoClient.connect('mongodb://localhost:27017/Akkredibot', function (err, db) {
 		if (err) throw err
@@ -649,34 +627,37 @@ app.get('/findua', function(req, res) {
 	// her vælges akkredibot databasen inklusiv query 
 			db.collection('Akkredibot').find(
 
-			{Institution: "Københavns Universitet", $text: { $search: "Biologi" }},{"Navn": 1, _id: 0} 
+			{Institution: inst, $text: { $search: udd }},{"Navn": 1,"Link_til_afgoerelsesbrev": 1, _id: 0} 
 						
 			).toArray(function(err, result) {
 			if (err) throw err;
 			
 			mongodbArray = result;
-
+			
 			if (mongodbArray.length == 0)
 			{
- 			jsonResponse.push({"Text": "Kunne desværre ikke finde noget, tjek evt. stavning"})
+ 			jsonResponse.push({"text": "Kunne desværre ikke finde noget, tjek evt. stavning"})
 			}
 
 			else if (mongodbArray.length == 1)
 			{
- 			jsonResponse.push({"Text": "Her er hvad jeg fandt:" +mongodbArray })
+			jsonResponse.push({"text": "Her er hvad jeg fandt: " +mongodbArray[0].Navn+ "" })
+			jsonResponse.push({"text": "Og du kan hente akkrediteringsrapporten her: http://akkrediteringsraadet.dk/wp-content/uploads/afgoerelser/" +mongodbArray[0].Link_til_afgoerelsesbrev+ "" })
 			}
 
  			else if (mongodbArray.length > 4 )
 			{
-  			jsonResponse.push({"Text": "Der er for mange muligheder, prøv at gøre din søgning mere specifik."})
+  			jsonResponse.push({"text": "Der er for mange muligheder, prøv at gøre din søgning mere specifik."})
 			}			
 
 			else {	
 			for(var i = 0; i < result.length;i++){
 				(function(j){
-					mongodbSvar = JSON.stringify(result[i].Navn)
+					mongodbSvar = result[i].Navn
+					mongodburl = result[i].Link_til_afgoerelsesbrev
 					i++
-					mongodbSvar2 = JSON.stringify(result[i].Navn)
+					mongodbSvar2 = result[i].Navn
+					mongodburl2 = result[i].Link_til_afgoerelsesbrev
 					
 					jsonResponse.push(
 						{  
@@ -692,7 +673,7 @@ app.get('/findua', function(req, res) {
               					"buttons": [
                 					{
                 					"type": "web_url",
-                  					"url": "https://akkr.dk",
+                  					"url": "http://akkrediteringsraadet.dk/wp-content/uploads/afgoerelser/"+mongodburl+"",
                   					"title": "Hent akkreditering"
                 					}
               					]
@@ -703,7 +684,7 @@ app.get('/findua', function(req, res) {
 								"buttons": [
 									{
                  				 	"type": "web_url",
-									"url": "https://akkr.dk",
+									"url": "http://akkrediteringsraadet.dk/wp-content/uploads/afgoerelser/"+mongodburl2+"",
 									"title": "Hent akkreditering"
                 					}
               					]
@@ -725,4 +706,30 @@ app.get('/findua', function(req, res) {
 	}
 	QueryMongoDB(SendJSON);
 	jsonResponse.length = 0;
+});
+
+// Test
+app.get('/test', function(req, res) {
+		
+	function QueryMongoDB(callback){
+		MongoClient.connect('mongodb://localhost:27017/Akkredibot', function (err, db) {
+		if (err) throw err
+   
+   // her vælges akkredibot databasen inklusiv query 
+			db.collection('Akkredibot').find({Institution: Inst, $text: { $search: udd }}, function(err, result) {
+				
+				mongodbSvar = JSON.stringify(result)
+							
+			callback()
+			})
+		})
+	}
+			
+	function SendJSON() {
+		jsonResponse.push({ "text": "Vi har foretaget " + mongodbSvar});
+		res.send(jsonResponse);		
+	}
+
+	QueryMongoDB(SendJSON);
+	mongodbSvar.length = 0;
 });
